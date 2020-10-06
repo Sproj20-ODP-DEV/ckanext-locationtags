@@ -2,6 +2,13 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 
+def check_empty(key, data, errors, context):
+    """Custom validator to check if field is empty or not when form is submitted"""
+    if not data.get(key, None):
+        errors[key].append('Location field is empty')
+    return
+
+
 class LocationtagsPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IDatasetForm)
@@ -23,8 +30,7 @@ class LocationtagsPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         schema = super(LocationTagsPlugin, self).create_package_schema()
         # our custom field
         schema.update({
-            'location': [toolkit.get_validator('ignore_missing'),
-                         toolkit.get_converter('convert_to_extras')]
+            'location': [check_empty, toolkit.get_converter('convert_to_extras')]
         })
         return schema
 
@@ -35,8 +41,7 @@ class LocationtagsPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                        self).update_package_schema()
         # our custom field
         schema.update({
-            'location': [toolkit.get_validator('ignore_missing'),
-                         toolkit.get_converter('convert_to_extras')]
+            'location': [check_empty, toolkit.get_converter('convert_to_extras')]
         })
         return schema
 
@@ -46,8 +51,7 @@ class LocationtagsPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         schema = super(LocationTagsPlugin,
                        self).show_package_schema()
         schema.update({
-            'custom_text': [toolkit.get_converter('ignore_missing'),
-                            toolkit.get_validator('convert_to_extras')]
+            'custom_text': [check_empty, toolkit.get_validator('convert_to_extras')]
         })
         return schema
 
