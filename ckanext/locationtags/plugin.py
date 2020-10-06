@@ -15,44 +15,43 @@ class LocationtagsPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     # IConfigurer
 
+    def _modify_package_schema(self, schema):
+        """Helper function to update schema"""
+        schema.update({
+            'location': [check_empty,
+                            tk.get_converter('convert_to_extras')]
+        })
+        return schema
+
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'location-tags')
 
-
     # IDatasetForm
 
-    """overriding create_package_schema to include the location field on resources when a dataset is created"""
-
     def create_package_schema(self):
+            """overriding create_package_schema to include the location field on resources when a dataset is created"""
         # let's grab the default schema in our plugin
         schema = super(LocationTagsPlugin, self).create_package_schema()
-        # our custom field
-        schema.update({
-            'location': [check_empty, toolkit.get_converter('convert_to_extras')]
-        })
+        schema = self._modify_package_schema(schema)
         return schema
 
-    """overriding update_package_schema to include the location field on resources when a dataset is updated"""
-
+    
     def update_package_schema(self):
+        """overriding update_package_schema to include the location field on resources when a dataset is updated"""
+
         schema = super(LocationTagsPlugin,
                        self).update_package_schema()
-        # our custom field
-        schema.update({
-            'location': [check_empty, toolkit.get_converter('convert_to_extras')]
-        })
+        schema = self._modify_package_schema(schema)
         return schema
 
-    """overriding update_package_schema to include the location field on resources when a dataset is updated"""
-
+    
     def show_package_schema(self):
+        """overriding update_package_schema to include the location field on resources when a dataset is updated"""
         schema = super(LocationTagsPlugin,
                        self).show_package_schema()
-        schema.update({
-            'custom_text': [check_empty, toolkit.get_validator('convert_to_extras')]
-        })
+        schema = self._modify_package_schema(schema)
         return schema
 
     def is_fallback(self):
