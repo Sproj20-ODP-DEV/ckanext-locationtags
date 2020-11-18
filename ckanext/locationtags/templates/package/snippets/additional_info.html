@@ -1,0 +1,10 @@
+{% ckan_extends %}
+
+{% block extras %}
+  {% if pkg_dict.location %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("Location") }}</th>
+      <td class="dataset-details">{{ pkg_dict.location }}</td>
+    </tr>
+  {% endif %}
+{% endblock %}

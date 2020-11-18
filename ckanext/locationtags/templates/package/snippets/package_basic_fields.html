@@ -1,0 +1,6 @@
+{% ckan_extends %}
+
+{% block package_basic_fields_tags %}
+    {{super()}}
+  {{ form.input('location', label=_('Location'), id='field-location', placeholder=_('Enter location(s) where data was recorded e.g. Punjab, Karachi etc'), value=data.location, error=errors.location, classes=['control-medium']) }}
+{% endblock %}
